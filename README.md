@@ -20,7 +20,7 @@ bash /root/omv-nas-setup/install.sh
 |--------|---------|
 | `01-base.sh` | System update + essential packages |
 | `02-user.sh` | Create users (raschagas, raschagasNAS) |
-| `03-network.sh` | Convert DHCP to static IP, set hostname + DNS |
+| `03-network.sh` | Convert DHCP to static IP, set hostname + DNS, install net-autoconfig service |
 | `04-ssh.sh` | SSH hardening, key auth, fail2ban, UFW firewall |
 | `05-omv-config.sh` | Enable SMB + NFS services in OMV |
 | `06-claude-code.sh` | Node.js 22 + Claude Code CLI + git config |
@@ -47,6 +47,34 @@ This will:
 Disk 1 (data):     media/ nextcloud/ documents/ downloads/ public/
 Disk 2 (backup):   nextcloud/ documents/ (daily rsync from Disk 1)
 Offsite:           Set up separately for critical files
+```
+
+## Network Auto-Configuration
+
+A systemd oneshot service (`nas-net-autoconfig`) runs every boot as a network fallback:
+
+- **Normal operation**: OMV manages the network; the service detects a working interface and exits immediately (no-op).
+- **First boot / motherboard swap**: No OMV config yet or old interface names; the service scans `/sys/class/net/`, picks the fastest wired NIC with carrier, runs DHCP, and gets an IP so you can SSH in.
+- **WiFi fallback**: If no wired carrier, uses `wpa_supplicant` with `/etc/nas-net-autoconfig/wifi.conf`.
+
+Installed via preseed `late_command` (first boot) and updated by `03-network.sh` (subsequent runs).
+
+```bash
+# Check status
+systemctl status nas-net-autoconfig
+journalctl -u nas-net-autoconfig
+
+# WiFi fallback config (optional)
+nano /etc/nas-net-autoconfig/wifi.conf
+```
+
+## USB Installer Prep
+
+To sync repo files to the OMV installer USB:
+
+```bash
+bash sync-to-usb.sh /mnt/usb
+# Then fix isolinux/install.cfg: file=/cdrom/preseed.cfg auto=true
 ```
 
 ## Access

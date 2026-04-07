@@ -78,3 +78,22 @@ echo "    Gateway: $GATEWAY"
 echo "    DNS: $DNS_PRIMARY, $DNS_FALLBACK"
 echo ""
 echo "    NOTE: Network changes take effect on next reboot or 'systemctl restart networking'"
+
+# --- Install network autoconfig service (boot-time fallback) ---
+echo ">>> Installing nas-net-autoconfig service..."
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+install -m 755 "${REPO_DIR}/config/nas-net-autoconfig.sh" /usr/local/bin/nas-net-autoconfig.sh
+install -m 644 "${REPO_DIR}/config/nas-net-autoconfig.service" /etc/systemd/system/nas-net-autoconfig.service
+
+mkdir -p /etc/nas-net-autoconfig
+if [ ! -f /etc/nas-net-autoconfig/wifi.conf ]; then
+    install -m 600 "${REPO_DIR}/config/wifi.conf" /etc/nas-net-autoconfig/wifi.conf
+    echo "    wifi.conf template installed — edit /etc/nas-net-autoconfig/wifi.conf for WiFi fallback"
+else
+    echo "    wifi.conf already exists, skipping (won't overwrite credentials)"
+fi
+
+systemctl daemon-reload
+systemctl enable nas-net-autoconfig.service
+echo "    nas-net-autoconfig service enabled (boot-time network fallback)"

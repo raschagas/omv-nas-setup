@@ -1,0 +1,14 @@
+[Unit]
+Description=NAS Network Auto-Configuration (bootstrap/fallback)
+After=systemd-udev-settle.service systemd-modules-load.service
+Before=networking.service network.target network-online.target
+Wants=systemd-udev-settle.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/nas-net-autoconfig.sh
+RemainAfterExit=yes
+TimeoutStartSec=120
+
+[Install]
+WantedBy=multi-user.target
