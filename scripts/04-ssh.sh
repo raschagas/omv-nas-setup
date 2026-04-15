@@ -5,6 +5,11 @@ set -euo pipefail
 MAIN_USER="raschagas"
 SSH_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxEbHyQ9AjQ8cL2zowwoaYc2OyJMbzVWW9b/bOqoG9I rasch@laptop"
 
+# --- Ensure SSH server is installed ---
+echo ">>> Installing openssh-server..."
+apt install -y openssh-server
+systemctl enable ssh
+
 # --- SSH Key Setup ---
 echo ">>> Setting up SSH keys..."
 for user in "$MAIN_USER" root; do
