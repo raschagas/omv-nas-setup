@@ -19,7 +19,7 @@ bash /root/omv-nas-setup/install.sh
 | Script | Purpose |
 |--------|---------|
 | `01-base.sh` | System update + essential packages |
-| `02-user.sh` | Create users (raschagas, raschagasNAS) |
+| `02-user.sh` | Create user (raschagas) |
 | `03-network.sh` | Convert DHCP to static IP, set hostname + DNS, install net-autoconfig service |
 | `04-ssh.sh` | SSH hardening, key auth, fail2ban, UFW firewall |
 | `05-omv-config.sh` | Enable SMB + NFS services in OMV |

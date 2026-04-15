@@ -3,12 +3,11 @@
 set -euo pipefail
 
 MAIN_USER="raschagas"
-SUDO_USER="raschagasNAS"
 SSH_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxEbHyQ9AjQ8cL2zowwoaYc2OyJMbzVWW9b/bOqoG9I rasch@laptop"
 
 # --- SSH Key Setup ---
 echo ">>> Setting up SSH keys..."
-for user in "$MAIN_USER" "$SUDO_USER" root; do
+for user in "$MAIN_USER" root; do
     if id "$user" &>/dev/null; then
         HOME_DIR=$(eval echo "~$user")
         SSH_DIR="$HOME_DIR/.ssh"

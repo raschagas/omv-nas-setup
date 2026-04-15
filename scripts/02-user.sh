@@ -4,8 +4,6 @@ set -euo pipefail
 
 MAIN_USER="raschagas"
 MAIN_PASS="Openmediavault@2026!"
-SUDO_USER="raschagasNAS"
-SUDO_PASS="123456"
 
 create_user() {
     local username="$1"
@@ -32,15 +30,10 @@ create_user() {
 # Create main user
 create_user "$MAIN_USER" "$MAIN_PASS" "sudo users ssh"
 
-# Create sudo/admin user
-create_user "$SUDO_USER" "$SUDO_PASS" "sudo users ssh"
-
 # Ensure sudo group has NOPASSWD (optional, remove if you want password prompts)
 if ! grep -q "^%sudo.*NOPASSWD" /etc/sudoers; then
     echo ">>> Configuring sudo group..."
     sed -i 's/^%sudo.*ALL=(ALL:ALL) ALL/%sudo   ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 fi
 
-echo ">>> Users configured:"
-echo "    Main user: $MAIN_USER"
-echo "    Sudo user: $SUDO_USER"
+echo ">>> User configured: $MAIN_USER"
