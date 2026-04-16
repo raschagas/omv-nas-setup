@@ -49,6 +49,7 @@ declare -A SSH_SETTINGS=(
     ["AllowAgentForwarding"]="yes"
     ["ClientAliveInterval"]="300"
     ["ClientAliveCountMax"]="3"
+    ["AllowGroups"]="root _ssh"
 )
 
 for key in "${!SSH_SETTINGS[@]}"; do
@@ -73,6 +74,7 @@ bantime = 1h
 findtime = 10m
 maxretry = 5
 backend = systemd
+ignoreip = 127.0.0.1/8 ::1 192.168.15.0/24
 
 [sshd]
 enabled = true

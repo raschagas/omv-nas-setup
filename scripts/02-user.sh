@@ -28,7 +28,7 @@ create_user() {
 }
 
 # Create main user
-create_user "$MAIN_USER" "$MAIN_PASS" "sudo users ssh"
+create_user "$MAIN_USER" "$MAIN_PASS" "sudo users ssh _ssh"
 
 # Ensure sudo group has NOPASSWD (optional, remove if you want password prompts)
 if ! grep -q "^%sudo.*NOPASSWD" /etc/sudoers; then
